@@ -5,7 +5,7 @@ This repository contains a series of analyses of the [mcstats](http://stats.mine
 If anyone from Mojang is reading; I'm a Computer Science student at Linköping University currently searching for a summer intership.
 
 FPS Analysis
---
+======
 
 To start off, here is the distribution of frames per second (fps).
 
@@ -35,7 +35,7 @@ there's no setting which goes higher than 0.3, which is well within the window o
 it turns out none was below 40 fps, which means the users with less than 30 fps was probably just having lag-spikes.
 
 How do people play the game?
---
+======
 
 ## Windowed vs Fullscreen
 How many people are playing in windowed vs fullscreen mode, and how does it affect the time played?
@@ -55,7 +55,7 @@ This is even more surprising. People who use the applet also play for about twic
 I'm not really sure why this is, and it seems hard to belive it's an anomaly since about 700,000 data points was analyzed.
 
 Popularity
---
+======
 
 ## Mod popularity
 
