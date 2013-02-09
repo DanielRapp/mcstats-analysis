@@ -1,0 +1,10 @@
+.RData
+.Rhistory
+*.sw*
+raw_gz
+raw_json
+csv
+csv_duplicates
+json2csv_duplicates.py
+.DS_Store
+img_highres
