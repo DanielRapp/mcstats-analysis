@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Mcstats-analysis by DanielRapp</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Mcstats-analysis</h1>
+        <p>A series of analyses of the #mcstats data.</p>
+
+        <p class="view"><a href="https://github.com/DanielRapp/mcstats-analysis">View the Project on GitHub <small>DanielRapp/mcstats-analysis</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/DanielRapp/mcstats-analysis/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/DanielRapp/mcstats-analysis/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/DanielRapp/mcstats-analysis">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>This is a series of analyses of the <a href="http://stats.minecraft.com">mcstats</a> data. Most graphs uses 2,300,000 data points (100,000 from each hour).</p>
+
+<p><em><strong>If anyone from Mojang is reading; <a href="mailto:danielrappt@gmail.com">I am</a> a Computer Science student at Linköping University currently searching for a summer intership.</strong></em></p>
+
+<h2>FPS Analysis</h2>
+
+<p>To start off, here is the distribution of frames per second (FPS).</p>
+
+<h3>FPS Distribution</h3>
+
+<p><img src="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/fps_dist.png" alt="FPS Distribution"></p>
+
+<p>A surpring amount of people have less than 30 fps. (And there's some odd spikes around 30, 60 and 120 fps.)[1]</p>
+
+<p>To narrow down what may have caused this, and to see if it could be prevented, I decided to graph the correlation between the fps various settings.</p>
+
+<h3>FPS-Setting correlation 1</h3>
+
+<p><img src="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/fps_corr.png" alt="FPS-Setting correlation"></p>
+
+<p>Since all correlations are below 0.3, there doesn't seem to be any one setting that affects the fps in any major way.
+This means there's no simple magic button you could toggle to increase the fps, but that's probably a good thing
+since it means there's no major performance hogs.</p>
+
+<p>Even looking at settings which you can't easily change, such as the number of CPU cores,
+there's no setting which goes higher than 0.3, which is well within the window of random noise.</p>
+
+<h3>FPS-Setting correlation 2</h3>
+
+<p><img src="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/fps_corr_more.png" alt="FPS-Setting correlation"></p>
+
+<p>[1] When I analzed the average fps for a varying amount of minutes played (defined as the number of logged records per unique snooper token * 15),
+it turns out none was below 40 fps, which means the users with less than 30 fps was probably just having lag-spikes.</p>
+
+<h2>How do people play the game?</h2>
+
+<h3>Windowed vs Fullscreen</h3>
+
+<p>How many people are playing in windowed vs fullscreen mode, and how does it affect the time played?</p>
+
+<p><img src="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/display_type_minutes.png" alt="windowed vs fullscreen"></p>
+
+<p>This is kind of surprising. People play about 10x more in fullscreen mode, but windowed mode is far more popular.
+This may be selection bais, since people who know how to turn on fullscreen mode have may also been playing the game longer,
+and are thus more likely to play for longer.</p>
+
+<h3>Applet</h3>
+
+<p>How many people are playing in the applet, and how does it affect the time played?</p>
+
+<p><img src="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/applet_minutes.png" alt="applet minutes"></p>
+
+<p>This is even more surprising. People who use the applet also play for about twice as long, despite desktop more being more popular.
+I'm not really sure why this is, and it seems hard to belive it's an anomaly since two million data points was analyzed.</p>
+
+<h2>Popularity</h2>
+
+<h3>Mod popularity</h3>
+
+<p>About 15% of people are using mods! I decided to only include the forge modloader, since all others were well below 1%.
+<img src="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/client_brand.png" alt="mod popularity"></p>
+
+<h3>Texturepack popularity</h3>
+
+<p>Default is used by 80% of users, this just shows non-default textures.
+<img src="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/texpack.png" alt="texturepack popularity"></p>
+
+<h3>Java version popularity, ordered by users</h3>
+
+<p><img src="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/java_by_popularity.png" alt="java version popularity, ordered by users"></p>
+
+<h3>Java version popularity, ordered by version number</h3>
+
+<p><img src="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/java_by_version.png" alt="java version popularity, ordered by version number"></p>
+
+<h3>OpenGL vendor popularity</h3>
+
+<p><img src="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/opengl_vendor.png" alt="OpenGL vendor popularity"></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/DanielRapp">DanielRapp</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-6717042-25");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
