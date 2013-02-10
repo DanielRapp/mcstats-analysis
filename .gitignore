@@ -1,0 +1,7 @@
+.Rhistory
+*.sw*
+csv
+img_highres
+json
+json2csv_dedicated.py
+json2csv_duplicates.py
