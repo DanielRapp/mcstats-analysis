@@ -2,27 +2,12 @@ require(ggplot2)
 require(scales)
 require(plyr)
 
-# 100,000 pre-converted csv snooping records (hour 0)
-# mc1e5 <- read.csv(file='csv/mc1e5.csv', sep=',', head=TRUE)
-
-# 1,000,000 pre-converted csv snooping records (hour 0)
-#mc1e6 <- read.csv(file='csv/mc1e6.csv', sep=',', head=TRUE)
-
-# 2,000,000 pre-converted csv snooping records (hour 0)
-#mc2e6 <- read.csv(file='csv/mc2e6.csv', sep=',', head=TRUE)
-
-# 3,000,000 pre-converted csv snooping records (hour 0)
-#mc3e6 <- read.csv(file='csv/mc3e6.csv', sep=',', head=TRUE)
-
-# ~5,000,000 pre-converted csv snooping records (hour 0, 2 and 3)
-#mc5e6 <- read.csv(file='csv/client.snoopdata.csv', sep=',', head=TRUE)
-
 # 2,300,000 pre-converted csv snooping records (100,000 from each hour, except hour 1)
-mcr <- read.csv(file='csv/mc_random.csv', sep=',', head=TRUE)
+mcr <- read.csv(file='csv/client/mc_random.csv', sep=',', head=TRUE)
 
 # ~700,000 pre-converted csv random snooping records
 # (only records with more than one instance of the same token)
-mcrd <- read.csv(file='csv_duplicates/mc_random_duplicates.csv', sep=',', head=TRUE)
+mcrd <- read.csv(file='csv/client/duplicates/mc_random_duplicates.csv', sep=',', head=TRUE)
 
 # Remove anomalous data
 sub_mc = subset(mcr, fps<150 & fps>1)
@@ -34,6 +19,7 @@ break_seq = seq(min_fps, max_fps, by=5)
 p <- ggplot(data=sub_mc, aes(x=fps)) +
      geom_histogram(binwidth=2) +
      ggtitle("fps distribution") +
+     facet_grid(vsync_enabled ~ .) +
      scale_x_continuous(breaks=break_seq) +
      xlab("1 < fps < 150") +
      ylab("fps frequency")
@@ -140,4 +126,114 @@ p <- ggplot(data=display_type_plays, aes(x=factor(display_type), y=mean_time_pla
   labs(fill="Popularity %")
 plot(p)
 ggsave(plot=p, filename='img/display_type_minutes.png', width=5, height=5)
+
+sample.df <- function(df, n) df[sample(nrow(df), n), , drop = FALSE]
+
+# # # # # # # # SERVER # # # # # # # #
+
+mcrs <- read.csv(file='csv/server/mc_rand_serv_dedicated.csv', sep=',', head=TRUE)
+sub_mcrs <- subset( sample.df(mcrs, 100000), avg_tick_ms > 1 & avg_tick_ms < 100000 & players_seen > 0)
+
+### Tick distribution ###
+p <- ggplot(data=subset(sub_mcrs, avg_tick_ms<200 & avg_tick_ms>1 & players_seen>100),
+        aes(x=avg_tick_ms)) +
+  geom_histogram(bin=5) +
+  ggtitle("Average tick ms distribution") +
+  xlab("Average tick ms")
+plot(p)
+ggsave(plot=p, filename='img/avg_tick_ms_dist.png', width=10, height=10)
+
+### Mod popularity ###
+ssub_mcrs <- subset(sub_mcrs, avg_tick_ms>1 & players_seen>0)
+sb <- ddply(ssub_mcrs, .(server_brand),
+        function(x) data.frame( count=nrow(x), ratio=nrow(x)/nrow(ssub_mcrs), avg_usr_curr=mean(x$players_current), avg_usr_seen=mean(x$players_seen) ) )
+
+p <- ggplot(data=sb, aes(x=reorder(server_brand, -ratio), y=ratio, fill=as.factor(round(avg_usr_curr)), color=avg_usr_seen)) +
+  geom_bar(stat="identity", size=2) +
+  ggtitle("Server mod popularity") +
+  xlab("Mod") +
+  ylab("Servers") +
+  labs(fill="Average\nOnline\nUsers", color="Average\nUsers\nSeen") +
+  scale_y_continuous(labels=percent)
+plot(p)
+ggsave(plot=p, filename='img/server_mod_pop.png')
+
+### Minecraft version adoption a###
+sb <- ddply(sub_mcrs, .(server_brand, version),
+        function(x) data.frame( count=nrow(x), ratio=nrow(x)/nrow(sub_mcrs), mean_tick=mean(x$avg_tick_ms) ))
+
+p <- ggplot(data=subset(sb, (server_brand=="vanilla" | server_brand=="craftbukkit") & mean_tick < 25),
+        aes(x=version, y=count, fill=mean_tick)) +
+  geom_bar(stat="identity") +
+  facet_grid(. ~ server_brand) +
+  ggtitle("Minecraft server version adoption") +
+  xlab("Version") +
+  ylab("Servers") +
+  labs(fill="Average\ntick ms") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
+plot(p)
+ggsave(plot=p, filename='img/java_version_dist_mod.png')
+
+### Most memory efficient mod ###
+sb <- ddply(subset(sub_mcrs, players_current>5), .(server_brand), function(x) data.frame(
+        mem_per_player = mean((x$memory_free/x$memory_total)/x$players_current), count=nrow(x)
+      ))
+
+p <- ggplot(data=subset(sb, count>100), aes(x=reorder(server_brand, mem_per_player), y=mem_per_player)) +
+  geom_bar(stat="identity") +
+  ggtitle("Most memory efficient mod (lower is better)") +
+  xlab("Mod") +
+  ylab("% active RAM used by a given player") +
+  labs(fill="Average total RAM") +
+  scale_y_continuous(labels=percent)
+plot(p)
+ggsave(plot=p, filename='img/ram_per_user.png')
+
+### Fastest server type ###
+sb <- ddply(subset(sub_mcrs, players_current>10 & (server_brand == "craftbukkit" | server_brand=="fml") ),
+      .(server_brand, gui_supported), function(x) data.frame(
+        mem_per_player = mean((x$memory_free/x$memory_total)/x$players_current), count=nrow(x), mean_tick=mean(x$avg_tick_ms)
+      ))
+
+p <- ggplot(data=subset(sb, count>10), aes(x=reorder(gui_supported, mean_tick), y=mean_tick, fill=round(mem_per_player*10000)/100)) +
+  geom_bar(stat="identity") +
+  ggtitle("Fastest server type") +
+  facet_grid(. ~ server_brand) +
+  xlab("Type") +
+  labs(fill="% active ram\nused by a\ngiven player") +
+  ylab("Average tick ms")
+plot(p)
+ggsave(plot=p, filename='img/fastest_mod.png')
+
+### Fastest server OS ###
+sb <- ddply(subset(sub_mcrs, players_current>10),
+      .(os_name), function(x) data.frame(
+        mem_per_player = mean((x$memory_free/x$memory_total)/x$players_current), count=nrow(x), mean_tick=mean(x$avg_tick_ms)
+      ))
+
+p <- ggplot(data=subset(sb, count>10), aes(x=reorder(os_name, mean_tick), y=mean_tick, fill=round(mem_per_player*10000)/100)) +
+  geom_bar(stat="identity") +
+  ggtitle("Fastest server OS") +
+  xlab("OS") +
+  labs(fill="% active ram\nused by a\ngiven player") +
+  ylab("Average tick ms") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))
+plot(p)
+ggsave(plot=p, filename='img/fastest_os.png')
+
+### Fastest Linux version ###
+sb <- ddply(subset(sub_mcrs, players_current>10 & os_name=="Linux"),
+      .(os_version), function(x) data.frame(
+        mem_per_player = mean((x$memory_free/x$memory_total)/x$players_current), count=nrow(x), mean_tick=mean(x$avg_tick_ms)
+      ))
+
+p <- ggplot(data=subset(sb, count>100), aes(x=reorder(os_version, mean_tick), y=mean_tick, fill=round(mem_per_player*10000)/100)) +
+  geom_bar(stat="identity") +
+  ggtitle("Fastest Linux version") +
+  xlab("Linux version") +
+  labs(fill="% active ram\nused by a\ngiven player") +
+  ylab("Average tick ms") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
+plot(p)
+ggsave(plot=p, filename='img/fastest_linux_version.png')
 
