@@ -6,5 +6,6 @@ raw_json
 csv
 csv_duplicates
 json2csv_duplicates.py
+json2csv.py
 .DS_Store
 img_highres
