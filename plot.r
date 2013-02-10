@@ -131,7 +131,6 @@ ggsave(plot=p, filename='img/display_type_minutes.png', width=5, height=5)
 
 sample.df <- function(df, n) df[sample(nrow(df), n), , drop = FALSE]
 mcrs <- read.csv(file='csv/server/mc_rand_serv_dedicated.csv', sep=',', head=TRUE)
-# sub_mcrs <- subset( sample.df(mcrs, 100000), avg_tick_ms > 1 & avg_tick_ms < 100000 & players_seen > 0)
 sub_mcrs <- subset( mcrs, avg_tick_ms > 1 & avg_tick_ms < 100000 & players_seen > 0)
 
 ### Tick distribution ###
@@ -236,3 +235,16 @@ p <- ggplot(data=subset(sb, count>100), aes(x=reorder(os_version, mean_tick), y=
   theme(axis.text.x = element_text(angle = 60, hjust = 1))
 plot(p)
 ggsave(plot=p, filename='img/fastest_linux_version.png')
+
+### OS Popularity ###
+os <- ddply(sub_mcrs, .(os_name), function(x) data.frame(ratio=nrow(x)/nrow(sub_mcrs)))
+
+p <- ggplot(data=os, aes(x=reorder(os_name, -ratio), y=ratio)) +
+  geom_bar() +
+  ggtitle("OS popularity") +
+  xlab("OS") +
+  ylab("Servers") +
+  scale_y_continuous(labels=percent) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
+plot(p)
+ggsave(plot=p, filename='img/os_popularity_server.png', width=5, height=5)
