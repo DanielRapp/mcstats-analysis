@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Server analysis of #mcstats by Daniel Rapp</title>
+
+    <link rel="stylesheet" href="../stylesheets/styles.css">
+    <style>
+     body {
+        font-family: helvetica, arial,sans-serif;
+        font-size: 1.1em;
+        line-height: 1.5em;
+        color: #191919;
+        display: list-item;
+      }
+      .wrapper {
+        width: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <body>
+      <div class="wrapper">
+        <h1>Server analysis of <a href="http://stats.minecraft.net">#mcstats</a></h1>
+
+        <p>This is a <a href="http://danielrapp.github.com/mcstats-analysis/">follow-up</a> to the series of analyses of the <a href="http://stats.minecraft.net">mcstats</a> data.
+          <a href="http://danielrapp.github.com/mcstats-analysis/">Click here to read the previous post.</a>
+          Most graphs uses <i>2,300,000</i> data points (<i>100,000</i> from each hour).
+        </p>
+        <p><em>If anyone from Mojang is reading; <a href="mailto:danielrappt@gmail.com">I am</a> a Computer Science student at Linköping University currently searching for a summer intership.</em></p>
+        <hr>
+        <h2>Average millisecond per tick distribution</h2>
+        <p>This post will focus on the server side, specifically speed. Let's start off by graphing the distribution of average tick milliseconds</p>
+        <p><a href="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/avg_tick_ms_dist.png"><img width=700 src="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/avg_tick_ms_dist.png" alt="avg tick ms distribution"></a></p>
+        <p>What's great about this distribution is that the great majority are below 50 ms, which actully isn't too bad.</p>
+
+        <h2>Server mod popularity</h2>
+        <p><a href="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/server_mod_pop.png"><img src="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/server_mod_pop.png" alt="server mod popularity"></a></p>
+        <p>CraftBukkit is certanly the most popular, but is it also the fastest and most memory efficient? Let's start with memory efficiency. To figure out, we're going to compare the three most popular server types by their memory usage.</p>
+
+        <h2>Memory (RAM) efficiency</h2>
+        <p>The percent active ram used by a given player is calculated as: <pre>(1 - memory free / memory total) / players online</pre></p>
+        <p><a href="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/ram_per_user.png"><img width=700 src="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/ram_per_user.png" alt="ram per user"></a></p>
+        <p>Maybe not so surprising. What you get in flexibility of mods, you pay out in memory usage. CraftBukkit is still the winner if you're going with mods however.</p>
+
+        <h2>Average milliseconds per tick</h2>
+        <p>What about raw speed, and does it matter if you run headless or GUI supported? Let's just focus on the two most popular mods.</p>
+        <p><a href="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/fastest_mod.png"><img width=700 src="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/fastest_mod.png" alt="fastest mod"></a></p>
+        <p>Memory usage isn't really affected, but average millisecond per tick is, though not by much. About 10ms for CraftBukkit, which wins the title of most memory efficient and fastest server mod.</p>
+
+        <h2>Fastest OS</h2>
+        <p>Does the OS you choose affect the performance of your minecraft server?</p>
+        <p><a href="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/fastest_os.png"><img width=700 src="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/fastest_os.png" alt="fastest os"></a></p>
+        <p>This time the difference between the most efficient and most <i>in</i>efficient is pretty dramatic. Linux, which is also the most popular server os, has an average tick millisecond more than twice of the worst offender, Windows 2003.</p>
+
+        <h2>Fastest version of Linux</h2>
+        <p>Let's zoom in even further, and analyze which version of Linux is most efficient.</p>
+        <p><a href="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/fastest_linux_version.png"><img width=700 src="http://github.com/DanielRapp/mcstats-analysis/raw/master/img/fastest_linux_version.png" alt="fastest linux version"></a></p>
+        <p>You should definitely take this last graph with a grain of salt, since only about 200 servers using <code>2.6.32-279.el6.x86_64</code> was analyzed, which probably isn't enough to be statistically significant.</pre>
+        <hr>
+        <p>If you have any comments or questions about the graphs, you should contact me on twitter <a href="http://twitter.com/danielrapp">@DanielRapp</a></p>
+        <p>If you think I've done something wrong, you can check out the code used to produce the graphs <a href="https://github.com/DanielRapp/mcstats-analysis/tree/master">on GitHub</a>.</p>
+      </div>
+  </body>
+<html>
