@@ -1,10 +1,8 @@
 .RData
 .Rhistory
 *.sw*
-raw_gz
-raw_json
+json
 csv
-csv_duplicates
 json2csv_duplicates.py
 json2csv_dedicated.py
 .DS_Store
