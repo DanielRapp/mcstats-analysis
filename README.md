@@ -1,8 +1,6 @@
 This repository contains a series of analyses of the [mcstats](http://stats.minecraft.net) data.
 '/img' contains the graphs, and plot.r contain the r scripts that created them.
 
-If anyone from Mojang is reading; I'm a Computer Science student at Linköping University currently searching for a summer intership.
-
 ## FPS Analysis
 
 To start off, here is the distribution of frames per second (fps).
